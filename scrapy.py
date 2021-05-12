@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
-
+import time 
 options = Options()
 options.headless = True
 options.add_argument("--window-size=1920,1200")
@@ -31,13 +31,19 @@ word = driver.find_element_by_xpath('//span[@class="badge coursefilter-total"]')
 totalNumber = word.split(' ', 1)
 totalCount = int(totalNumber[0])//20
 print(totalCount)
+driver.save_screenshot("screenshot.png")
+
 for i in range(0,totalCount):
     for j in range(0, 20):
-        # driver.find_elements_by_css_selector(".main-col.v_middle.peopleNameTD")[j].find_elements_by_xpath("//strong").text
-        userName = driver.find_element_by_css_selector('td.main-col.v_middle.peopleNameTD')[j].find_element_by_css_selector('strong')[0].text
-        print(userName)
-        # userEmail = driver.find_element_by_xpath('//td[@class="main-col v_middle peopleNameTD"].eq(j).find("small")').text
-        # $("td.main-col.v_middle.peopleNameTD").eq(0).find("strong").text()
-        # $("td.main-col.v_middle.peopleNameTD").eq(1).find("small").text()
-driver.save_screenshot('screenshot.png')
+        userName = driver.find_element_by_tag_name("tbody").find_elements_by_tag_name("tr")[j].find_elements_by_tag_name("td")[1].find_element_by_tag_name("strong")
+        userEmail = driver.find_element_by_tag_name("tbody").find_elements_by_tag_name("tr")[j].find_elements_by_tag_name("td")[1].find_element_by_tag_name("small")
+        status = driver.find_element_by_tag_name("tbody").find_elements_by_tag_name("tr")[j].find_elements_by_tag_name("td")[3].find_element_by_tag_name("small")
+        last = driver.find_element_by_tag_name("tbody").find_elements_by_tag_name("tr")[j].find_elements_by_tag_name("td")[4].find_element_by_tag_name("small")
+        print(userName.text)
+        print(userEmail.text)
+        print(status.text)
+        print(last.text)
+    peopleButton = driver.find_element_by_xpath('//a[@title="Page Suivant"]').click()
+    driver.save_screenshot("screenshot1.png")
+    time.sleep(3)
 driver.quit()
