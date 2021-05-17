@@ -73,15 +73,17 @@ for i in range(0,int(totalCount) + 1):
         print(object.text)
         print(toSend.text)
 
-        # Check if exist the new got row on the table
-        sqlq = "SELECT COUNT(*) FROM report_history WHERE dealname = '"+ dealName.text +"' and username = '" + userName.text + "' and email = '" + userEmail.text + "' and object = '" + object.text + "'" 
-        mycursor.execute(sqlq)
-        if mycursor.fetchone()[0]:
-            print("This row exits")
-            continue
-
-        # Insert new row into the table
-        sql = "INSERT INTO report_history (dealname, username, status, email, object, tosend) VALUES (%s, %s, %s, %s,%s, %s)"
+        # # Check if exist the new got row on the table
+        # sqlq = "SELECT COUNT(*) FROM report_history WHERE dealname = '"+ dealName.text +"' AND username = '"+ userName.text +"' AND status = '"+ status.text +"' AND email = '"+ userEmail.text +"' AND object = '"+ object.text +"'"
+        # mycursor.execute(sqlq)
+        # if mycursor.fetchone()[0]:
+        #     print("This row exits")
+        #     continue
+        # else:
+        # Insert record if not exists in table
+        sql = "INSERT INTO report_history (dealname, username, status, email, object, tosend) VALUES (%s, %s, %s, %s,%s, %s) \
+                WHERE not exists \
+                (Select * from report_history WHERE dealname = '"+ dealName.text +"' AND username = '"+ userName.text +"' AND status = '"+ status.text +"' AND email = '"+ userEmail.text +"' AND object = '"+ object.text +"') LIMIT 1"
         val = (dealName.text, userName.text, status.text, userEmail.text, object.text, toSend.text)
 
         mycursor.execute(sql, val)
@@ -89,7 +91,7 @@ for i in range(0,int(totalCount) + 1):
     nextArrow = driver.find_element_by_xpath("//button[@id='nextArrow']").click()
 
     time.sleep(3)
-    # Screenshot present processing page
     driver.save_screenshot("screenshot1.png")
-    
+
+
 driver.quit()
